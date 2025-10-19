@@ -13,6 +13,7 @@
   #playerContainer{margin-top:40px;text-align:center}
   audio{width:90%;max-width:500px;margin-top:10px}
   #stopBtn{margin-top:10px;padding:10px 20px;font-size:16px;border-radius:8px;cursor:pointer}
+  #errorMsg{color:#f55;font-size:14px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -23,6 +24,7 @@
 <div id="playerContainer">
   <audio id="mainPlayer" controls></audio><br>
   <button id="stopBtn" onclick="stopRadio()">Stop</button>
+  <div id="errorMsg"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -45,11 +47,13 @@ const radios = [
 let mainPlayer = document.getElementById('mainPlayer');
 let hlsInstance = null;
 let activeButton = null;
+const errorMsg = document.getElementById('errorMsg');
 
 function stopRadio(){
   if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
   mainPlayer.pause();
   mainPlayer.src = "";
+  errorMsg.textContent = "";
   if(activeButton){ activeButton.classList.remove('active'); activeButton = null; }
 }
 
@@ -61,12 +65,20 @@ function playRadio(button, url){
   if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
   mainPlayer.pause();
   mainPlayer.src = "";
+  errorMsg.textContent = "";
 
-  if(Hls.isSupported() && url.endsWith('.m3u8')){
-    hlsInstance = new Hls();
-    hlsInstance.loadSource(url);
-    hlsInstance.attachMedia(mainPlayer);
-    hlsInstance.on(Hls.Events.MANIFEST_PARSED, ()=> mainPlayer.play());
+  if(url.endsWith('.m3u8')){
+    if(Hls.isSupported()){
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(url);
+      hlsInstance.attachMedia(mainPlayer);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, ()=> mainPlayer.play());
+    } else if(mainPlayer.canPlayType('application/vnd.apple.mpegurl')){
+      mainPlayer.src = url;
+      mainPlayer.play();
+    } else {
+      errorMsg.textContent = "Il tuo browser non supporta lo streaming HLS.";
+    }
   } else {
     mainPlayer.src = url;
     mainPlayer.play();
@@ -75,7 +87,7 @@ function playRadio(button, url){
 
 function renderButtons(){
   const grid = document.getElementById('radioGrid');
-  grid.innerHTML = ""; // pulizia
+  grid.innerHTML = "";
   radios.forEach(r => {
     const btn = document.createElement('button');
     btn.textContent = r.name;
@@ -85,7 +97,6 @@ function renderButtons(){
   });
 }
 
-// Genera i bottoni subito
 renderButtons();
 </script>
 </body>
