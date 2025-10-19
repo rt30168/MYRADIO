@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radio Italiane</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#fff;margin:0;padding:20px}
+  h1{text-align:center;color:#ffeb3b;margin-top:10px;margin-bottom:30px}
+  .radio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;justify-items:center;text-align:center}
+  .radio-button{padding:12px 15px;font-size:16px;border-radius:8px;border:1px solid #ccc;cursor:pointer;background:#333;color:#fff;transition:background .3s,color .3s;width:100%}
+  .radio-button.active{background:#ffeb3b;color:#000;font-weight:700}
+  #playerContainer{margin-top:40px;text-align:center}
+  audio{width:90%;max-width:500px;margin-top:10px}
+  #stopBtn{margin-top:10px;padding:10px 20px;font-size:16px;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Radio Italiane</h1>
+
+<div class="radio-grid" id="radioGrid"></div>
+
+<div id="playerContainer">
+  <audio id="mainPlayer" controls></audio><br>
+  <button id="stopBtn" onclick="stopRadio()">Stop</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+const radios = [
+  { name: "Deejay", url: "http://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/play1.m3u8" },
+  { name: "30 Songs", url: "https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay30songs/radiodeejay30songs/master_ma.m3u8" },
+  { name: "RTL Best", url: "https://streamingv2.shoutcast.com/rtl-1025-best" },
+  { name: "Virgin Classic", url: "http://icy.unitedradio.it/VirginRockClassics.mp3" },
+  { name: "Bruno", url: "https://router.xdevel.com/audio4s975355-254/stream/icecast.audio" },
+  { name: "Radio Italia", url: "https://radioitaliasmi.akamaized.net/hls/live/2093120/RISMI/stream01/streamPlaylist.m3u8" },
+  { name: "Radio 24", url: "http://shoutcast2.radio24.it:8000/;" },
+  { name: "Marilù", url: "http://wma01.fluidstream.net/marilu" },
+  { name: "R.105 Dance 90", url: "http://icy.unitedradio.it/105Dance90.mp3" },
+  { name: "Radio 80", url: "http://str01.fluidstream.net:7020/;stream.mp3" },
+  { name: "Classic Hits", url: "https://classichitsradio.streamingmedia.it/play" },
+  { name: "RDS 100%", url: "https://stream.rds.radio/audio/rds.stream_aac64/chunklist.m3u8" }
+];
+
+let mainPlayer = document.getElementById('mainPlayer');
+let hlsInstance = null;
+let activeButton = null;
+
+function stopRadio(){
+  if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
+  mainPlayer.pause();
+  mainPlayer.src = "";
+  if(activeButton){ activeButton.classList.remove('active'); activeButton = null; }
+}
+
+function playRadio(button, url){
+  if(activeButton) activeButton.classList.remove('active');
+  activeButton = button;
+  activeButton.classList.add('active');
+
+  if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
+  mainPlayer.pause();
+  mainPlayer.src = "";
+
+  if(Hls.isSupported() && url.endsWith('.m3u8')){
+    hlsInstance = new Hls();
+    hlsInstance.loadSource(url);
+    hlsInstance.attachMedia(mainPlayer);
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED, ()=> mainPlayer.play());
+  } else {
+    mainPlayer.src = url;
+    mainPlayer.play();
+  }
+}
+
+function renderButtons(){
+  const grid = document.getElementById('radioGrid');
+  grid.innerHTML = ""; // pulizia
+  radios.forEach(r => {
+    const btn = document.createElement('button');
+    btn.textContent = r.name;
+    btn.className = 'radio-button';
+    btn.onclick = () => playRadio(btn, r.url);
+    grid.appendChild(btn);
+  });
+}
+
+// Genera i bottoni subito
+renderButtons();
+</script>
+</body>
+</html>
