@@ -5,88 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Radio Italiane</title>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ffeb3b">
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #111;
-    color: #fff;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    color: #ffeb3b;
-    margin-top: 10px;
-    margin-bottom: 30px;
-  }
-  .radio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    justify-items: center;
-    text-align: center;
-  }
-  .radio-button {
-    padding: 12px 15px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    background: #333;
-    color: #fff;
-    transition: background .3s, color .3s;
-    width: 100%;
-  }
-  .radio-button.active {
-    background: #ffeb3b;
-    color: #000;
-    font-weight: 700;
-  }
-  #playerContainer {
-    margin-top: 40px;
-    text-align: center;
-  }
-  audio {
-    width: 90%;
-    max-width: 500px;
-    margin-top: 10px;
-  }
-  #stopBtn {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  #debug {
-    font-size: 13px;
-    color: #9c9;
-    margin-top: 12px;
-    text-align: center;
-    transition: opacity 0.5s ease;
-  }
+  body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#fff;margin:0;padding:20px}
+  h1{text-align:center;color:#ffeb3b;margin-bottom:30px}
+  .radio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;justify-items:center;text-align:center}
+  .radio-button{padding:12px 15px;font-size:16px;border-radius:8px;border:1px solid #ccc;cursor:pointer;background:#333;color:#fff;transition:background .3s,color .3s;width:100%}
+  .radio-button.active{background:#ffeb3b;color:#000;font-weight:700}
+  #playerContainer{margin-top:40px;text-align:center}
+  audio{width:90%;max-width:500px;margin-top:10px}
+  #stopBtn{margin-top:10px;padding:10px 20px;font-size:16px;border-radius:8px;cursor:pointer}
+  #debug{font-size:13px;color:#9c9;margin-top:12px;text-align:center;transition:opacity 0.5s ease}
 </style>
 </head>
 <body>
-<h1>Radio Italiane</h1>
+<h1>Ascolta le tue Radio</h1>
 
-<div class="radio-grid" id="radioGrid">
-<button class="radio-button" onclick="playRadio(this, 'http://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/play1.m3u8')">Radio Deejay</button>
-<button class="radio-button" onclick="playRadio(this, 'https://StreamCdnF42-4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay30songs/radiodeejay30songs/master_ma.m3u8')">Deejay 30 Songs</button>
-<button class="radio-button" onclick="playRadio(this, 'https://streamingv2.shoutcast.com/rtl-1025-best')">RTL 102.5 Best</button>
-<button class="radio-button" onclick="playRadio(this, 'http://icy.unitedradio.it/VirginRockClassics.mp3')">Virgin Radio Classic Rock</button>
-<button class="radio-button" onclick="playRadio(this, 'https://stream6.xdevel.com/audio4s975355-395/stream/icecast.audio')">Radio Bruno</button>
-<button class="radio-button" onclick="playRadio(this, 'https://radioitaliasmi.akamaized.net/hls/live/2093120/RISMI/stream01/streamPlaylist.m3u8')">Radio Italia Solo Musica Italiana</button>
-<button class="radio-button" onclick="playRadio(this, 'http://shoutcast2.radio24.it:8000/;')">Radio 24 il sole 24 ore</button>
-<button class="radio-button" onclick="playRadio(this, 'http://wma01.fluidstream.net/marilu')">Radio Marilù</button>
-<button class="radio-button" onclick="playRadio(this, 'http://icy.unitedradio.it/105Dance90.mp3')">Radio 105 - Dance 90</button>
-<button class="radio-button" onclick="playRadio(this, 'https://redbeemedia.streamabc.net/redbm-rtv80-mp3-192-4673332?sABC=68s504n5%230%234313or3p195706q13n90589o7061s597%23aycb&aw_0_1st.playerid=nlpo&amsparams=playerid:nlpo;skey:1760887973')">Radio 80</button>
-<button class="radio-button" onclick="playRadio(this, 'https://classichitsradio.streamingmedia.it/play')">CLASSIC HITS RADIO Italia</button>
-<button class="radio-button" onclick="playRadio(this, 'https://stream.rds.radio/audio/rds.stream_aac64/chunklist.m3u8')">RDS 100% Grandi Successi</button>
-
-</div>
+<div class="radio-grid" id="radioGrid"></div>
 
 <div id="playerContainer">
   <audio id="mainPlayer" controls></audio><br>
@@ -95,6 +30,22 @@
 </div>
 
 <script>
+/* Nomi ESATTI per le API */
+const exactNames = [
+  "Radio Deejay",
+  "Deejay 30 Songs",
+  "RTL 102.5 Best",
+  "Virgin Radio Classic Rock",
+  "Radio Bruno",
+  "Radio Italia Solo Musica Italiana",
+  "Radio 24 il sole 24 ore",
+  "Radio Marilù",
+  "Radio 105 - Dance 90",
+  "Radio 80",
+  "CLASSIC HITS RADIO Italia",
+  "RDS 100% Grandi Successi"
+];
+
 /* Nomi brevi per i pulsanti */
 const shortNames = {
   "Radio Deejay": "Deejay",
@@ -111,7 +62,7 @@ const shortNames = {
   "RDS 100% Grandi Successi": "RDS 100%"
 };
 
-/* Fallback statico */
+/* Fallback */
 const fallbackRadios = [
   { name: "Radio Deejay", url: "http://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/play1.m3u8" },
   { name: "Deejay 30 Songs", url: "https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay30songs/radiodeejay30songs/master_ma.m3u8" },
@@ -127,19 +78,21 @@ const fallbackRadios = [
   { name: "RDS 100% Grandi Successi", url: "https://stream.rds.radio/audio/rds.stream_aac64/chunklist.m3u8" }
 ];
 
+const apiServer = "https://de1.api.radio-browser.info";
 const debugEl = document.getElementById('debug');
 let mainPlayer = document.getElementById('mainPlayer');
 let hlsInstance = null;
 let activeButton = null;
 
-/* Log */
 function logDebug(msg, persist=false){
   debugEl.textContent = msg;
   debugEl.style.opacity = "1";
-  if(!persist) setTimeout(()=>{ debugEl.style.opacity="0"; }, 3000);
+  if(!persist){
+    setTimeout(()=>{ debugEl.style.opacity="0"; }, 3000);
+  }
 }
 
-/* Stop */
+/* STOP */
 function stopRadio(){
   if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
   mainPlayer.pause();
@@ -147,7 +100,7 @@ function stopRadio(){
   if(activeButton){ activeButton.classList.remove('active'); activeButton = null; }
 }
 
-/* Play */
+/* PLAY */
 function playRadio(button, url){
   if(!url){ alert("Streaming non disponibile per questa radio."); return; }
   if(activeButton) activeButton.classList.remove('active');
@@ -169,7 +122,7 @@ function playRadio(button, url){
   }
 }
 
-/* Crea pulsanti */
+/* render buttons */
 function renderButtons(radios){
   const grid = document.getElementById('radioGrid');
   grid.innerHTML = "";
@@ -182,13 +135,61 @@ function renderButtons(radios){
   });
 }
 
-/* Caricamento locale */
-function loadRadios(){
-  renderButtons(fallbackRadios);
-  logDebug("Caricate radio da fallback locale.");
+/* fetch API esatta */
+async function fetchExactRadios(){
+  const radiosResult = [];
+  for(const name of exactNames){
+    try{
+      const res = await fetch(`${apiServer}/json/stations/bynameexact/${encodeURIComponent(name)}`, {cache:"no-store"});
+      if(!res.ok) throw new Error(res.status);
+      const st = await res.json();
+      if(Array.isArray(st) && st.length>0){
+        const url = st[0].url_resolved || st[0].url || null;
+        radiosResult.push({ name: st[0].name || name, url });
+      } else {
+        const fb = fallbackRadios.find(f=>f.name===name);
+        radiosResult.push(fb || {name, url:null});
+      }
+    } catch(e){
+      const fb = fallbackRadios.find(f=>f.name===name);
+      radiosResult.push(fb || {name, url:null});
+    }
+  }
+  return radiosResult;
 }
 
-/* Avvio */
+/* caricamento */
+async function loadRadios(){
+  logDebug("Aggiornamento in corso...", true);
+  const saved = localStorage.getItem('lastRadios');
+  if(saved){
+    try{
+      const arr = JSON.parse(saved);
+      renderButtons(arr);
+    }catch{}
+  }
+
+  try{
+    const radios = await fetchExactRadios();
+    const anyUrl = radios.some(r=>r && r.url);
+    if(anyUrl){
+      localStorage.setItem('lastRadios', JSON.stringify(radios));
+      renderButtons(radios);
+      logDebug("Aggiornamento completato!");
+    } else throw new Error("Nessun URL valido");
+  }catch(e){
+    const stored = localStorage.getItem('lastRadios');
+    if(stored){
+      renderButtons(JSON.parse(stored));
+      logDebug("API non raggiungibili: uso dati salvati.");
+    } else {
+      renderButtons(fallbackRadios);
+      logDebug("API non raggiungibili: uso fallback locale.");
+    }
+  }
+}
+
+/* avvio */
 loadRadios();
 </script>
 </body>
