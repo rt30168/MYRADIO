@@ -7,10 +7,11 @@
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#fff;margin:0;padding:20px}
 h1{text-align:center;color:#ffeb3b;margin-bottom:30px}
-.radio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;justify-items:center;text-align:center}
-.radio-button{padding:12px 15px;font-size:16px;border-radius:8px;border:1px solid #ccc;cursor:pointer;background:#333;color:#fff;transition:background .3s,color .3s;width:100%}
+.radio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;justify-items:center;text-align:center}
+.radio-button{padding:8px 12px;font-size:14px;border-radius:6px;border:1px solid #ccc;cursor:pointer;background:#333;color:#fff;transition:background .3s,color .3s;width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .radio-button.active{background:#ffeb3b;color:#000;font-weight:700}
-#audioPlayer{width:90%;max-width:500px;margin-top:20px}
+#audioPlayer{width:90%;max-width:500px;margin-top:20px;display:block}
+#stopBtn{margin-top:10px;padding:10px 20px;font-size:16px;border-radius:8px;cursor:pointer;display:block}
 </style>
 </head>
 <body>
@@ -32,7 +33,7 @@ h1{text-align:center;color:#ffeb3b;margin-bottom:30px}
 </div>
 <div id="playerContainer">
 <audio id="audioPlayer" controls></audio>
-<button onclick="stopRadio()">Stop</button>
+<button id="stopBtn" onclick="stopRadio()">Stop</button>
 </div>
 <script>
 let activeButton = null;
