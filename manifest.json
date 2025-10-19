@@ -1,0 +1,15 @@
+{
+  "name": "Radio Italiane",
+  "short_name": "Radio",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#ffeb3b",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
